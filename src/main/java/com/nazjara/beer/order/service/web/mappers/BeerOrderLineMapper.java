@@ -1,7 +1,7 @@
 package com.nazjara.beer.order.service.web.mappers;
 
 import com.nazjara.beer.order.service.domain.BeerOrderLine;
-import com.nazjara.beer.order.service.web.model.BeerOrderLineDto;
+import com.nazjara.beer.order.service.model.BeerOrderLineDto;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 

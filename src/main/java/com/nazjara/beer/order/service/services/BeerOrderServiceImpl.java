@@ -1,20 +1,3 @@
-/*
- *  Copyright 2019 the original author or authors.
- *
- * This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 package com.nazjara.beer.order.service.services;
 
 import com.nazjara.beer.order.service.domain.BeerOrder;
@@ -23,8 +6,8 @@ import com.nazjara.beer.order.service.domain.BeerOrderStatusEnum;
 import com.nazjara.beer.order.service.repositories.BeerOrderRepository;
 import com.nazjara.beer.order.service.repositories.CustomerRepository;
 import com.nazjara.beer.order.service.web.mappers.BeerOrderMapper;
-import com.nazjara.beer.order.service.web.model.BeerOrderDto;
-import com.nazjara.beer.order.service.web.model.BeerOrderPagedList;
+import com.nazjara.beer.order.service.model.BeerOrderDto;
+import com.nazjara.beer.order.service.model.BeerOrderPagedList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;

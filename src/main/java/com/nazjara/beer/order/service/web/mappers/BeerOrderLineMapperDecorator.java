@@ -2,8 +2,8 @@ package com.nazjara.beer.order.service.web.mappers;
 
 import com.nazjara.beer.order.service.domain.BeerOrderLine;
 import com.nazjara.beer.order.service.services.BeerService;
-import com.nazjara.beer.order.service.web.model.BeerDto;
-import com.nazjara.beer.order.service.web.model.BeerOrderLineDto;
+import com.nazjara.beer.order.service.model.BeerDto;
+import com.nazjara.beer.order.service.model.BeerOrderLineDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

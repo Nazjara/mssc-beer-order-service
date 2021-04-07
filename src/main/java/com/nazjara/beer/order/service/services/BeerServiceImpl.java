@@ -1,6 +1,6 @@
 package com.nazjara.beer.order.service.services;
 
-import com.nazjara.beer.order.service.web.model.BeerDto;
+import com.nazjara.beer.order.service.model.BeerDto;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;

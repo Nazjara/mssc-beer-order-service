@@ -1,6 +1,6 @@
 package com.nazjara.beer.order.service.services;
 
-import com.nazjara.beer.order.service.web.model.BeerDto;
+import com.nazjara.beer.order.service.model.BeerDto;
 
 import java.util.Optional;
 import java.util.UUID;
