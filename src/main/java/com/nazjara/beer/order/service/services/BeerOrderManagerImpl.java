@@ -13,6 +13,11 @@ import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.VALIDATION_FAILED;
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.VALIDATION_PASSED;
+
 @Service
 @RequiredArgsConstructor
 public class BeerOrderManagerImpl implements BeerOrderManager {
@@ -34,6 +39,17 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         sendBeerOrderEvent(savedBeerOrder, BeerOrderEventEnum.VALIDATE_ORDER);
 
         return savedBeerOrder;
+    }
+
+    @Override
+    public void processValidationResult(UUID id, boolean isValid) {
+        var beerOrder = beerOrderRepository.getOne(id);
+
+        if (isValid) {
+            sendBeerOrderEvent(beerOrder, VALIDATION_PASSED);
+        } else {
+            sendBeerOrderEvent(beerOrder, VALIDATION_FAILED);
+        }
     }
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEventEnum) {
