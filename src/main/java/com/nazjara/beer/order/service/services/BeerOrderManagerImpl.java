@@ -3,6 +3,7 @@ package com.nazjara.beer.order.service.services;
 import com.nazjara.beer.order.service.domain.BeerOrder;
 import com.nazjara.beer.order.service.domain.BeerOrderEventEnum;
 import com.nazjara.beer.order.service.domain.BeerOrderStatusEnum;
+import com.nazjara.beer.order.service.model.BeerOrderDto;
 import com.nazjara.beer.order.service.repositories.BeerOrderRepository;
 import com.nazjara.beer.order.service.statemachine.BeerOrderStateChangeInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.ALLOCATE_ORDER;
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.ALLOCATION_FAILED;
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.ALLOCATION_NO_INVENTORY;
+import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.ALLOCATION_SUCCESS;
 import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.VALIDATION_FAILED;
 import static com.nazjara.beer.order.service.domain.BeerOrderEventEnum.VALIDATION_PASSED;
 
@@ -47,9 +52,39 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
         if (isValid) {
             sendBeerOrderEvent(beerOrder, VALIDATION_PASSED);
+
+            var validatedOrder = beerOrderRepository.getOne(id);
+            sendBeerOrderEvent(validatedOrder, ALLOCATE_ORDER);
         } else {
             sendBeerOrderEvent(beerOrder, VALIDATION_FAILED);
         }
+    }
+
+    @Override
+    public void processAllocationResult(BeerOrderDto beerOrderDto, boolean isAllocationError, boolean pendingInventory) {
+        var beerOrder = beerOrderRepository.getOne(beerOrderDto.getId());
+
+        if (isAllocationError) {
+            sendBeerOrderEvent(beerOrder, ALLOCATION_FAILED);
+        } else if (pendingInventory) {
+            sendBeerOrderEvent(beerOrder, ALLOCATION_NO_INVENTORY);
+            updateQuantity(beerOrderDto, beerOrder);
+        } else {
+            sendBeerOrderEvent(beerOrder, ALLOCATION_SUCCESS);
+            updateQuantity(beerOrderDto, beerOrder);
+        }
+    }
+
+    private void updateQuantity(BeerOrderDto beerOrderDto, BeerOrder beerOrder) {
+        var updatedOrder = beerOrderRepository.getOne(beerOrderDto.getId());
+
+        updatedOrder.getBeerOrderLines().forEach(beerOrderLine -> beerOrderDto.getBeerOrderLines().forEach(beerOrderLineDto -> {
+            if (beerOrderLine.getId().equals(beerOrderLineDto.getId())) {
+                beerOrderLine.setQuantityAllocated(beerOrderLineDto.getQuantityAllocated());
+            }
+        }));
+
+        beerOrderRepository.saveAndFlush(beerOrder);
     }
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEventEnum) {
